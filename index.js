@@ -1,79 +1,89 @@
-//byId
-// let header=document.getElementById("header-title")
-// header.textContent="vivek"
+let inputBox=document.querySelector('#item')
+let submit=document.querySelector('#submit')
+let items=document.querySelector('#items')
+let match=document.querySelector('#filter')
+let isEditable=false
 
-// document.getElementById("header-title").style.border="2px solid red" 
-
-
-// by className
-// let listGroup=document.getElementsByClassName("list-group-item")
-// console.log(listGroup[2].textContent="vivek")
-
-//by qyueryselector
-
-// let qs=document.querySelector(".list-group-item")
-// console.log(qs)
-// let qs=document.querySelectorAll(".list-group-item")
-// console.log(qs)
-
-//Event handling
-// let button=document.getElementById("btn")
-// button.addEventListener("click", function(){
-//     document.body.style.backgroundColor="red"
-// })
-
-// let uli=document.getElementById("items")
-
-//  uli.addEventListener("mousemove",function(e){
-//  //document.body.style.backgroundColor='rgb(${e.clientX},{e.clientY},0)'
-// //console.log(e.clientX,e.clientY)
-// document.getElementById("main").style.backgroundColor=" red" 
-
-// })
-
-let form=document.getElementById("addForm")
-let ul=document.getElementById("items")
-let item1=document.getElementById("item")
-let filter=document.getElementById("filter")
-
-form.addEventListener("submit", function(e){
-    e.preventDefault()
-    let item=item1.value
-   
-let li=document.createElement("li")
-let btn=document.createElement("button")
-btn.innerText="X"
-btn.className="btn btn-danger btn-sm float-right delete"
-li.appendChild(document.createTextNode(item))
-li.appendChild(btn)
-li.className="list-group-item"
-ul.appendChild(li)
-document.getElementById("item").value="" 
-})
-
-ul.addEventListener("click",function(e){
-
-if(e.target.classList.contains("delete")) {
-   if(confirm("are you sure want to delete")){
-    //console.log(e.target.parentElement)
-ul.removeChild(e.target.parentElement)
-   }
-}
-
-})
-
-filter.addEventListener("input",function(e){
-
-    let li=document.querySelectorAll("li")
- Array.from(li).forEach((item)=>{
-
-    if(item.firstChild.textContent.indexOf(e.target.value)!=-1){
-
-      item.style.display="block"
-    }
-    else{
-      item.style.display="none"
-    }
- })
+inputBox.addEventListener('input',(e)=>{
     
 })
+
+match.addEventListener('input',find)
+
+items.addEventListener('click',function(e){
+  if(e.target.textContent==='X')
+    Delete(e)
+   else if(e.target.textContent==='Edit'){
+    let list=e.target.parentElement
+    Edit(list)
+   }
+   
+})
+
+submit.addEventListener('click',function(e){
+    e.preventDefault()
+    add()
+    
+})
+
+function add(){
+    
+    if(!isEditable){
+    let li=document.createElement('li')
+    let btn1=document.createElement('button')
+    let btn2=document.createElement('button')
+    li.classList.add("list-group-item")
+    btn1.classList.add('btn',"btn-danger","btn-sm","float-right","delete",'ml-4')
+    btn2.classList.add('btn',"btn-secondary","btn-sm","float-right",)
+    li.innerHTML=inputBox.value
+    btn1.innerHTML='X'
+    btn2.innerHTML='Edit'
+    li.appendChild(btn1)
+    li.appendChild(btn2)
+    items.appendChild(li)
+   
+    }
+
+    else{
+        let li=document.querySelectorAll('li')
+        Array.from(li).forEach(function(item){
+            if(item.classList.contains('update')){
+                item.childNodes[0].textContent=inputBox.value
+                item.classList.remove('update')
+            }
+             
+        })
+        isEditable=false
+    }
+    inputBox.value=''
+}
+
+function Delete(e){
+    items.removeChild(e.target.parentElement)    
+}
+
+function Edit(list){
+ inputBox.value=list.childNodes[0].textContent
+ isEditable=true
+ list.classList.add('update')
+}
+
+function find(e){
+    let li=document.querySelectorAll('li')
+    let text=e.target.value.toLowerCase()
+    Array.from(li).forEach(function(item){
+        var itemName = item.firstChild.textContent;
+		if(itemName.toLowerCase().indexOf(text)!= -1){
+			item.style.display = 'block';
+		}
+		else
+		{
+			item.style.display = 'none';
+		}  
+    })
+}
+
+
+
+
+
